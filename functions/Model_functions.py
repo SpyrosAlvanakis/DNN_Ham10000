@@ -2,26 +2,18 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from skimage import io, transform
-# from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.metrics import confusion_matrix
+# from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# import optuna
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-# from torchsummary import summary
 import torch.optim as optim
 from torch.autograd import Variable
-from PIL import Image
 import torchvision
 from torchvision import models,transforms
 
@@ -129,14 +121,6 @@ def train_and_validate_model(model, train_loader, val_loader, test_loader, crite
     print('-------------------------------------------------------')
     return model,total_loss_train, total_loss_val, total_acc_train, total_acc_val
 
-
-# def set_para_req_grad(model, grad):
-#     if grad == True:
-#         for param in mode.parameters():
-#             param.requires_grad = False
-
-
-
 # feature_extract is a boolean that defines if we are finetuning or feature extracting. 
 # If feature_extract = False, the model is finetuned and all model parameters are updated. 
 # If feature_extract = True, only the last layer parameters are updated, the others remain fixed.
@@ -176,12 +160,13 @@ def initialise_model(model_name, num_classes, feature_extract, use_pretrained=Tr
     return model_ft
 
 
-def conf_report(model_fitted,loader, model_type, device):
+def conf_report(model_fitted,loader, model_type):
     y_pred = []
     y_true = []
     for data, target in loader:
-        data, target = data.to(device), target.to(device)
-        output = model_fitted(data)
+        data, target = data.to('cpu'), target.to('cpu')
+        model_cpu = model_fitted.to('cpu')
+        output = model_cpu(data)
         y_pred.extend(output.argmax(dim=1).tolist())
         y_true.extend(target.tolist())
     

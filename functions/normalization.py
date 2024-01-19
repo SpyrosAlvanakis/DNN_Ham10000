@@ -1,28 +1,10 @@
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-
-from skimage import io, transform
-# from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.metrics import confusion_matrix
-
-# import optuna
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.utils.data import Dataset, DataLoader
-# from torchsummary import summary
-import torch.optim as optim
-from torch.autograd import Variable
-from PIL import Image
-import torchvision
-from torchvision import models,transforms
-
-from PIL import Image
 import cv2
+import torch
+from torchvision import transforms
+
 
 def compute_img_mean_std(image_paths,img_h,img_w):
     """
