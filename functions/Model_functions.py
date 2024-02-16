@@ -160,6 +160,29 @@ def initialise_model(model_name, num_classes, feature_extract, use_pretrained=Tr
 
 
 def conf_report(model_fitted,loader, model_type):
+    """
+    Generate and display a confusion matrix and a classification report for the predictions made by a model.
+
+    Parameters:
+    - model_fitted: The trained model that will be used to make predictions. The model should be compatible
+                    with the data provided by the loader and should have a `to` method for device management
+                    and an `argmax` method for getting predictions.
+    - loader: A data loader that provides batches of data. Each batch should be a tuple containing data
+              and its corresponding labels. The loader should be iterable.
+    - model_type: A string indicating the type of the model. This is used for labeling purposes
+                  when saving the confusion matrix figure.
+
+    The function does the following:
+    - Iterates over the provided data loader to collect model predictions and true labels.
+    - Computes a confusion matrix both in raw and normalized form.
+    - Displays heatmaps for both raw and normalized confusion matrices.
+    - Prints a classification report showing main classification metrics.
+
+    Outputs:
+    - A figure with two subplots: the left one showing the normalized confusion matrix and the right
+      one showing the raw confusion matrix. The figure is saved as 'Confusion_Matrix_{model_type}.png'.
+    - A printed classification report in the console.
+    """
     y_pred = []
     y_true = []
     for data, target in loader:
