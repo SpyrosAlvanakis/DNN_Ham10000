@@ -81,7 +81,7 @@ def test_model(model, test_loader, device):
     test_accuracy = 100 * correct / total
     return test_accuracy
 
-def train_and_validate_model(model, train_loader, val_loader, test_loader, criterion, patience, optimizer, device, epochs, model_filename):
+def train_and_validate_model(model, train_loader, val_loader, test_loader, criterion, patience, optimizer, device, epochs, model_filename, verbose=False):
     min_valid_loss = np.inf
 
     total_loss_train = []
@@ -99,11 +99,11 @@ def train_and_validate_model(model, train_loader, val_loader, test_loader, crite
             total_loss_val.append(valid_loss)
             total_acc_train.append(train_acc)
             total_acc_val.append(valid_acc)
-        
-            print(f'Epoch {epoch+1}')
-            print(f'Training Loss: {train_loss} \nTraining Accuracy: {train_acc}%')
-            print(f'Validation Loss: {valid_loss} \nValidation Accuracy: {valid_acc}%')
-            print('=======================================================================')
+            if verbose:
+                print(f'Epoch {epoch+1}')
+                print(f'Training Loss: {train_loss} \nTraining Accuracy: {train_acc}%')
+                print(f'Validation Loss: {valid_loss} \nValidation Accuracy: {valid_acc}%')
+                print('=======================================================================')
         if min_valid_loss > valid_loss:
             print(f'Validation Loss Decreased({min_valid_loss:.6f}--->{valid_loss:.6f}) \nSaving The Model')
             print('=======================================================================')
@@ -115,10 +115,10 @@ def train_and_validate_model(model, train_loader, val_loader, test_loader, crite
 
     best_model_state = torch.load(model_filename)
     model.load_state_dict(best_model_state)
-    test_accuracy = test_model(model, test_loader, device)
-    print('-------------------------------------------------------')
-    print(f'Best models accuracy {test_accuracy}')
-    print('-------------------------------------------------------')
+    # test_accuracy=test_model(model, test_loader, device)
+    # print('-------------------------------------------------------')
+    # print(f'Best models accuracy {test_accuracy}')
+    # print('-------------------------------------------------------')
     return model,total_loss_train, total_loss_val, total_acc_train, total_acc_val
 
 # feature_extract is a boolean that defines if we are finetuning or feature extracting. 
@@ -128,7 +128,6 @@ def set_parameter_requires_grad(model, feature_extracting):
     if feature_extracting:
         for param in model.parameters():
             param.requires_grad = False
-
 
 
 def initialise_model(model_name, num_classes, feature_extract, use_pretrained=True):
