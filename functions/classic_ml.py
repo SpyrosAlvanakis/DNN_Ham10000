@@ -2,14 +2,11 @@ import optuna
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.linear_model import LogisticRegression
-# from xgboost import XGBClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
-# from lightgbm import LGBMClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
-# from catboost import CatBoostClassifier
 import sklearn
 from tqdm import tqdm
 from numba import jit
@@ -234,7 +231,6 @@ optuna_grid = {
         "SGDClassifier": {
             "loss": optuna.distributions.CategoricalDistribution(["hinge", "modified_huber", "perceptron"]),
             "penalty": optuna.distributions.CategoricalDistribution([ "l2","l1",None, "elasticnet"]),
-            # "alpha": optuna.distributions.FloatDistribution(1e-4, 1e-1),
             "tol": optuna.distributions.FloatDistribution(1e-4, 1e-1),
             "n_jobs": optuna.distributions.CategoricalDistribution([-1]),
             "verbose": optuna.distributions.CategoricalDistribution([0]),
@@ -327,8 +323,6 @@ def hyperparameter_tuning(X_train, y_train, X_test, y_test, splits=5, n_trials=1
         score = scorer(clf, X_test, y_test)
         print(f'Best score: {score}')
         print(f'Best parameters: {clf.best_params_}')
-        # return {'name': name, 'score': score, 'best_params': clf.best_params_}
-        # result = run_estimator(estimator, X_train, y_train, X_test, y_test, cv, scoring, n_trials, verbose)
         results.append({'name': name, 'score': score, 'best_params': clf.best_params_})
 
     results_df = pd.DataFrame(results)

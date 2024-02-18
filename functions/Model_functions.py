@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-# from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import seaborn as sns
@@ -115,15 +114,9 @@ def train_and_validate_model(model, train_loader, val_loader, test_loader, crite
 
     best_model_state = torch.load(model_filename)
     model.load_state_dict(best_model_state)
-    # test_accuracy=test_model(model, test_loader, device)
-    # print('-------------------------------------------------------')
-    # print(f'Best models accuracy {test_accuracy}')
-    # print('-------------------------------------------------------')
     return model,total_loss_train, total_loss_val, total_acc_train, total_acc_val
 
-# feature_extract is a boolean that defines if we are finetuning or feature extracting. 
-# If feature_extract = False, the model is finetuned and all model parameters are updated. 
-# If feature_extract = True, only the last layer parameters are updated, the others remain fixed.
+
 def set_parameter_requires_grad(model, feature_extracting):
     if feature_extracting:
         for param in model.parameters():
@@ -147,12 +140,6 @@ def initialise_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier.in_features
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
-    # elif model_name == 'vgg_pret':
-    #     model = models.vgg16(pretrained=use_pretrained)
-    #     set_para_req_grad(model,grad)
-    #     # num_ftrs = model.classifier.in_features
-    #     num_ftrs = model.classifier[6].in_features
-    #     model.classifier = nn.Linear(num_ftrs, num_classes)
     else:
         print("Invalid model name, choose between 'resnet_pret', 'densenet_pret'.")
         exit()
@@ -192,7 +179,7 @@ def conf_report(model_fitted,loader, model_type):
         y_pred.extend(output.argmax(dim=1).tolist())
         y_true.extend(target.tolist())
     
-    classes = ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc']
+    classes = [ 'bkl','nv','df','mel','vasc','bcc','akiec']
 
     cf_matrix = confusion_matrix(y_true, y_pred)
     df_temp = pd.DataFrame(cf_matrix / np.sum(cf_matrix, axis=1)[:, np.newaxis], index=classes, columns=classes)

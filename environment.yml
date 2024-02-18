@@ -3,6 +3,7 @@ channels:
   - defaults
 dependencies:
   - python=3.11
+  - optuna=3.5.0
   - numpy
   - pandas
   - matplotlib
@@ -10,7 +11,7 @@ dependencies:
   - scikit-learn
   - jupyter
   - pip:
-    - torchvision
-    - torch
+    - torchvision==0.16.2+cu121
+    - torch==2.1.2+cu121
     - scikit-image
-    - opencv-python
+    - opencv-python==4.9.0
